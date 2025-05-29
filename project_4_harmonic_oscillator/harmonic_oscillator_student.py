@@ -63,7 +63,7 @@ def rk4_step(ode_func: Callable, state: np.ndarray, t: float, dt: float, **kwarg
     k2 = ode_func(state + dt/2 * k1, t + dt/2, **kwargs)
     k3 = ode_func(state + dt/2 * k2, t + dt/2, **kwargs)
     k4 = ode_func(state + dt * k3, t + dt, **kwargs)
-    return state + dt/6 * (k1 + 2k2 + 2k3 + k4)
+    return state + dt/6 * (k1 + 2*k2 + 2*k3 + k4)
 
 def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float, float], 
               dt: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
