@@ -43,10 +43,9 @@ def solve_lorenz_equations(sigma=10.0, r=28.0, b=8/3,
     # TODO: 使用solve_ivp求解洛伦兹方程 (约3行代码)
     # [STUDENT_CODE_HERE]
     t_eval = np.arange(t_span[0], t_span[1], dt)
-    # 使用 partial 函数将 sigma, r, b 固定
-    lorenz_partial = partial(lorenz_system, sigma=sigma, r=r, b=b)
-    sol = solve_ivp(lorenz_partial, t_span, [x0, y0, z0], method='RK45', t_eval=t_eval)
-    return sol.t, sol.y
+    # 使用 lambda 函数将 sigma, r, b 固定
+    sol = solve_ivp(lambda t, state: lorenz_system(state, sigma, r, b), t_span, [x0, y0, z0], method='RK45', t_eval=t_eval)
+    return sol.t, np.array(sol.y)
 
 
 def plot_lorenz_attractor(t: np.ndarray, y: np.ndarray):
