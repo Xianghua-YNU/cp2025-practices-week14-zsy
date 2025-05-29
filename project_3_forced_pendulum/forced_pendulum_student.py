@@ -21,6 +21,7 @@ def solve_pendulum(l=0.1, g=9.81, C=2, Omega=5, t_span=(0,100), y0=[0,0]):
     """
     # TODO: 使用solve_ivp求解受迫单摆方程
     # 提示: 需要调用forced_pendulum_ode函数
+    t_eval=None
     sol = solve_ivp(
         fun=forced_pendulum_ode, 
         t_span=t_span, 
