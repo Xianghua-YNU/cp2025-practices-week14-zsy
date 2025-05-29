@@ -25,7 +25,7 @@ def lorenz_system(state, sigma, r, b):
     # [STUDENT_CODE_HERE]
     x, y, z = state
     dxdt = sigma * (y - x)
-    dydt = x * (r - z) - y     
+    dydt = x * (r - z) - y
     dzdt = x * y - b * z
     return [dxdt, dydt, dzdt]
 
