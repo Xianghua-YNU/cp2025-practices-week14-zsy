@@ -20,7 +20,7 @@ def harmonic_oscillator_ode(state: np.ndarray, t: float, omega: float = 1.0) -> 
     # dv/dt = -omega^2 * x
     x, v = state
     dxdt = v
-    dvdt = -omega**2 * x
+    dvdt = -omega**2 * x  
     return np.array([dxdt, dvdt])
 
 def anharmonic_oscillator_ode(state: np.ndarray, t: float, omega: float = 1.0) -> np.ndarray:
@@ -41,9 +41,9 @@ def anharmonic_oscillator_ode(state: np.ndarray, t: float, omega: float = 1.0) -
     # dv/dt = -omega^2 * x^3
     x, v = state
     dxdt = v
-    dvdt = -omega2 * x3
+    dvdt = -omega**2 * x**3 
     return np.array([dxdt, dvdt])
-
+    
 def rk4_step(ode_func: Callable, state: np.ndarray, t: float, dt: float, **kwargs) -> np.ndarray:
     """
     使用四阶龙格-库塔方法进行一步数值积分。
@@ -87,10 +87,11 @@ def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float
     states = np.zeros((n_steps, len(initial_state)))
     states[0] = initial_state
     current_state = initial_state.copy()
+    
     for i in range(1, n_steps):
         current_state = rk4_step(ode_func, current_state, t[i-1], dt, **kwargs)
         states[i] = current_state
-
+    
     return t, states
 
 def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
