@@ -147,7 +147,8 @@ def analyze_period(t: np.ndarray, states: np.ndarray) -> float:
     x = states[:, 0]
     peaks, _ = find_peaks(x)
     if len(peaks) < 2:
-    return np.nan  # 返回无效值表示无法计算周期
+        return np.nan  # 返回无效值表示无法计算周期
+    
     time_diffs = np.diff(t[peaks])
     period = np.mean(time_diffs)
     return period
