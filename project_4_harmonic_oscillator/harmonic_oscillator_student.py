@@ -2,6 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 from typing import Tuple, Callable, List
 
+def find_peaks(x):
+    """简单的峰值检测算法"""
+    peaks = []
+    for i in range(1, len(x)-1):
+        if x[i] > x[i-1] and x[i] > x[i+1]:
+            peaks.append(i)
+    return np.array(peaks), None
+
+
+
 def harmonic_oscillator_ode(state: np.ndarray, t: float, omega: float = 1.0) -> np.ndarray:
     """
     简谐振子的一阶微分方程组。
