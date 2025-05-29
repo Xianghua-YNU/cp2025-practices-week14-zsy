@@ -26,7 +26,8 @@ def solve_pendulum(l=0.1, g=9.81, C=2, Omega=5, t_span=(0,100), y0=[0,0]):
         t_span=t_span, 
         y0=y0, 
         args=(l, g, C, Omega),
-        dense_output=True
+        dense_output=True,
+        t_eval=t_eval
     )
     return sol.t, sol.y[0]
 
@@ -44,13 +45,24 @@ def find_resonance(l=0.1, g=9.81, C=2, Omega_range=None, t_span=(0,200), y0=[0,0
     amplitudes = []
     
     for Omega in Omega_range:
-        t, theta = solve_pendulum(l, g, C, Omega, t_span, y0)
+        # 指定时间点确保有足够的数据点
+        t_eval = np.linspace(t_span[0], t_span[1], 1000)
+        t, theta = solve_pendulum(l, g, C, Omega, t_span, y0, t_eval)
+        
         # 取稳态阶段的最大振幅
-        steady_state_index = t > 50
-        max_amplitude = np.max(np.abs(theta[steady_state_index]))
+        if len(t) > 0:
+            steady_state_index = t > 50
+            if np.any(steady_state_index):
+                max_amplitude = np.max(np.abs(theta[steady_state_index]))
+            else:
+                max_amplitude = 0
+        else:
+            max_amplitude = 0
+        
         amplitudes.append(max_amplitude)
     
     return Omega_range, amplitudes
+    
 def plot_results(t, theta, title):
     """绘制结果"""
     # 此函数已提供完整实现，学生不需要修改
@@ -60,7 +72,8 @@ def plot_results(t, theta, title):
     plt.xlabel('Time (s)')
     plt.ylabel('Angle (rad)')
     plt.grid(True)
-    plt.savefig(savefig)
+    if savefig:
+        plt.savefig(savefig)
     plt.show()
 
 def main():
@@ -73,9 +86,11 @@ def main():
     Omega = 5
     t_span = (0, 100)
     y0 = [0, 0]
+    t_eval = np.linspace(t_span[0], t_span[1], 2000)
     
-    t, theta = solve_pendulum(l, g, C, Omega, t_span, y0)
+    t, theta = solve_pendulum(l, g, C, Omega, t_span, y0, t_eval)
     plot_results(t, theta, title='θ(t) vs t for Ω=5, s^-1', savefig='task1.png')
+    
     # 任务2: 探究共振现象
     # TODO: 调用find_resonance并绘制共振曲线
     Omega_range, amplitudes = find_resonance(l, g, C, Omega_range=None)
@@ -88,14 +103,15 @@ def main():
     plt.grid(True)
     plt.savefig('resonance.png')
     plt.show()
+    
     # 找到共振频率并绘制共振情况
     # TODO: 实现共振频率查找和绘图
-    resonance_index = np.argmax(amplitudes)
-    Omega_res = Omega_range[resonance_index]
-    
-    t, theta = solve_pendulum(l, g, C, Omega_res, t_span, y0)
-    plot_results(t, theta, title=f'θ(t) vs t at resonance frequency Ω={Omega_res:.2f} s^-1', savefig='resonance_case.png')
-
+    if amplitudes:
+        resonance_index = np.argmax(amplitudes)
+        Omega_res = Omega_range[resonance_index]
+        
+        t, theta = solve_pendulum(l, g, C, Omega_res, t_span, y0, t_eval)
+        plot_results(t, theta, title=f'θ(t) vs t at resonance frequency Ω={Omega_res:.2f} s^-1', savefig='resonance_case.png')
 
 if __name__ == '__main__':
     main()
