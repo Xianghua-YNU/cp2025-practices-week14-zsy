@@ -24,7 +24,6 @@ def van_der_pol_ode(state: np.ndarray, t: float, mu: float = 1.0, omega: float =
     dvdt = mu * (1 - x**2) * v - omega**2 * x
     return np.array([dxdt, dvdt])
 
-
 def rk4_step(ode_func: Callable, state: np.ndarray, t: float, dt: float, **kwargs) -> np.ndarray:
     """
     使用四阶龙格-库塔方法进行一步数值积分。
@@ -141,10 +140,9 @@ def analyze_limit_cycle(states: np.ndarray) -> Tuple[float, float]:
     """
     # TODO: 实现极限环分析
     x = states[:, 0]
-    # 简单估计振幅为最大值减去最小值的一半
+
     amplitude = (np.max(x) - np.min(x)) / 2
-    # 简单估计周期为震荡一次所需的时间（这里简化处理）
-    # 实际应用中可能需要更复杂的周期检测算法
+  
     peaks = np.where(np.diff(np.sign(np.diff(x))) < 0)[0] + 1
     if len(peaks) >= 2:
         period = np.mean(np.diff(peaks)) * dt
@@ -177,14 +175,13 @@ def main():
     # 1. 绘制相空间轨迹
     # 2. 分析极限环特征
     plot_phase_space(states, title="任务3 - 相空间轨迹")
-    # 2. 分析极限环特征
-    amplitude, period = analyze_limit_cycle(states)
+    amplitude, period = analyze_limit_cycle(states, dt)  # 传递 dt 参数
     print(f"极限环振幅: {amplitude:.2f}, 周期: {period:.2f}")
     
     # TODO: 任务4 - 能量分析
     # 1. 计算和绘制能量随时间的变化
     # 2. 分析能量的耗散和补充
-    energies = np.array([calculate_energy(state, omega) for state in states])
+   energies = np.array([calculate_energy(state, omega) for state in states])
     plt.figure()
     plt.plot(t_values, energies)
     plt.xlabel('时间 t')
@@ -193,7 +190,7 @@ def main():
     plt.grid(True)
     plt.savefig("任务4 - 能量随时间的变化.png")  # 保存为PNG
     plt.show()
-    # 2. 分析能量的耗散和补充
+ 
     plt.figure()
     plt.plot(t_values[:-1], np.diff(energies) / dt)
     plt.xlabel('时间 t')
