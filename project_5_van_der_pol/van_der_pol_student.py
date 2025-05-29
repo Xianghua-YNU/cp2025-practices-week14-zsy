@@ -43,7 +43,7 @@ def rk4_step(ode_func: Callable, state: np.ndarray, t: float, dt: float, **kwarg
     k2 = ode_func(state + 0.5 * dt * k1, t + 0.5 * dt, **kwargs)
     k3 = ode_func(state + 0.5 * dt * k2, t + 0.5 * dt, **kwargs)
     k4 = ode_func(state + dt * k3, t + dt, **kwargs)
-    return state + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
+    return state + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
     
 def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float, float], 
               dt: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
@@ -140,7 +140,7 @@ def analyze_limit_cycle(states: np.ndarray, dt: float = 0.01) -> Tuple[float, fl
     """
     # TODO: 实现极限环分析
     x = states[:, 0]
-    amplitude = (np.max(x) - np.min(x)) / 2
+    amplitude = (np.max(x) - np.min(x)) / 2.0
     peaks = np.where(np.diff(np.sign(np.diff(x))) < 0)[0] + 1
     if len(peaks) >= 2:
         period = np.mean(np.diff(peaks)) * dt
