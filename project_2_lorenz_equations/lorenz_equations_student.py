@@ -24,6 +24,9 @@ def lorenz_system(state, sigma, r, b):
     # TODO: 实现洛伦兹系统方程 (约3行代码)
     # [STUDENT_CODE_HERE]
     x, y, z = state
+    sigma = 10.0
+    r = 28.0
+    b = 8/3
     dxdt = sigma * (y - x)
     dydt = x * (r - z) - y
     dzdt = x * y - b * z
@@ -43,7 +46,7 @@ def solve_lorenz_equations(sigma=10.0, r=28.0, b=8/3,
     # TODO: 使用solve_ivp求解洛伦兹方程 (约3行代码)
     # [STUDENT_CODE_HERE]
     t_eval = np.arange(t_span[0], t_span[1], dt)
-    sol = solve_ivp(lorenz_system, t_span, [x0, y0, z0], args=(sigma, r, b), method='RK45', t_eval=t_eval)
+    sol = solve_ivp(lorenz_system, t_span, [x0, y0, z0], method='RK45', t_eval=t_eval)
     return sol.t, sol.y
 
 
@@ -60,7 +63,7 @@ def plot_lorenz_attractor(t: np.ndarray, y: np.ndarray):
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
     ax.set_title('Lorenz Attractor')
-    plt.savefig('lorenz_attractor.png')  # 保存PNG图像
+    plt.savefig('lorenz_attractor.png')
     plt.show()
 
 
@@ -72,6 +75,7 @@ def compare_initial_conditions(ic1, ic2, t_span=(0, 50), dt=0.01):
     # [STUDENT_CODE_HERE]
     t, y1 = solve_lorenz_equations(x0=ic1[0], y0=ic1[1], z0=ic1[2], dt=dt)
     _, y2 = solve_lorenz_equations(x0=ic2[0], y0=ic2[1], z0=ic2[2], dt=dt)
+
     plt.figure(figsize=(10, 6))
     plt.plot(t, y1[0], label='x(t) IC1')
     plt.plot(t, y2[0], label='x(t) IC2', linestyle='--')
@@ -79,8 +83,8 @@ def compare_initial_conditions(ic1, ic2, t_span=(0, 50), dt=0.01):
     plt.ylabel('x(t)')
     plt.title('Comparison of Initial Conditions')
     plt.legend()
-
-    plt.savefig('initial_conditions_comparison.png') 
+    
+    plt.savefig('initial_conditions_comparison.png')
     plt.show()
     
     
