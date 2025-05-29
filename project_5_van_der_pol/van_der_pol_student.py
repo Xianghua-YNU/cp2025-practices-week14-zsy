@@ -128,7 +128,7 @@ def calculate_energy(state: np.ndarray, omega: float = 1.0) -> float:
     E = 0.5 * v**2 + 0.5 * omega**2 * x**2
     return E
 
-def analyze_limit_cycle(states: np.ndarray, dt: float = 0.01) -> Tuple[float, float]:
+def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
     """
     分析极限环的特征（振幅和周期）。
     
@@ -140,10 +140,15 @@ def analyze_limit_cycle(states: np.ndarray, dt: float = 0.01) -> Tuple[float, fl
     """
     # TODO: 实现极限环分析
     x = states[:, 0]
+    t = np.arange(len(x))
     amplitude = (np.max(x) - np.min(x)) / 2.0
-    peaks = np.where(np.diff(np.sign(np.diff(x))) < 0)[0] + 1
+    peaks = []
+    for i in range(1, len(x)-1):
+        if x[i] > x[i-1] and x[i] > x[i+1]:
+            peaks.append(x[i])
     if len(peaks) >= 2:
-        period = np.mean(np.diff(peaks)) * dt
+        period = np.diff(t[1:-1][np.array([x[i] > x[i-1] and x[i] > x[i+1] for i in range(1, len(x)-1)])])
+        period = np.mean(periods) if len(periods) > 0 else np.nan
     else:
         period = None
     return amplitude, period
