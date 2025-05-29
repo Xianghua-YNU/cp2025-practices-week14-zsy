@@ -21,11 +21,11 @@ def solve_pendulum(l=0.1, g=9.81, C=2, Omega=5, t_span=(0,100), y0=[0,0]):
     """
     # TODO: 使用solve_ivp求解受迫单摆方程
     # 提示: 需要调用forced_pendulum_ode函数
-    t_eval=None
+    t_eval = np.linspace(t_span[0], t_span[1], 2000)
     sol = solve_ivp(
-        fun=forced_pendulum_ode, 
-        t_span=t_span, 
-        y0=y0, 
+        fun=forced_pendulum_ode,
+        t_span=t_span,
+        y0=y0,
         args=(l, g, C, Omega),
         dense_output=True,
         t_eval=t_eval
@@ -46,11 +46,9 @@ def find_resonance(l=0.1, g=9.81, C=2, Omega_range=None, t_span=(0,200), y0=[0,0
     amplitudes = []
     
     for Omega in Omega_range:
-        # 指定时间点确保有足够的数据点
         t_eval = np.linspace(t_span[0], t_span[1], 1000)
-        t, theta = solve_pendulum(l, g, C, Omega, t_span, y0, t_eval)
+        t, theta = solve_pendulum(l, g, C, Omega, t_span, y0)
         
-        # 取稳态阶段的最大振幅
         if len(t) > 0:
             steady_state_index = t > 50
             if np.any(steady_state_index):
