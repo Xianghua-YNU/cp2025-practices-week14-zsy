@@ -3,9 +3,9 @@
 """
 项目1：Lotka-Volterra捕食者-猎物模型 - 学生代码模板
 
-学生姓名：[请填写您的姓名]
-学号：[请填写您的学号]
-完成日期：[请填写完成日期]
+学生姓名：[朱思宇]
+学号：[20221170050]
+完成日期：[2025.5.29]
 """
 
 import numpy as np
@@ -42,8 +42,9 @@ def lotka_volterra_system(state: np.ndarray, t: float, alpha: float, beta: float
     # TODO: 实现Lotka-Volterra方程组 (约2-3行代码)
     # 提示：根据上面的方程组计算 dx/dt 和 dy/dt
     # [STUDENT_CODE_HERE]
-    raise NotImplementedError("请在 lotka_volterra_system 函数中实现方程组")
-    
+    x, y = state
+    dxdt = alpha * x - beta * x * y
+    dydt = gamma * x * y - delta * y
     return np.array([dxdt, dydt])
 
 
@@ -75,7 +76,7 @@ def euler_method(f, y0: np.ndarray, t_span: Tuple[float, float],
     # 提示：y_{n+1} = y_n + dt * f(y_n, t_n)
     # [STUDENT_CODE_HERE]
     for i in range(n_steps - 1):
-        raise NotImplementedError("请在 euler_method 函数中实现欧拉法迭代")
+        y[i+1] = y[i] + dt * f(y[i], t[i], *args)
     
     return t, y
 
@@ -111,8 +112,9 @@ def improved_euler_method(f, y0: np.ndarray, t_span: Tuple[float, float],
     # y_{n+1} = y_n + (k1 + k2) / 2
     # [STUDENT_CODE_HERE]
     for i in range(n_steps - 1):
-        raise NotImplementedError("请在 improved_euler_method 函数中实现改进欧拉法")
-    
+        k1 = dt * f(y[i], t[i], *args)
+        k2 = dt * f(y[i] + k1, t[i] + dt, *args)
+        y[i+1] = y[i] + (k1 + k2) / 2
     return t, y
 
 
@@ -149,7 +151,12 @@ def runge_kutta_4(f, y0: np.ndarray, t_span: Tuple[float, float],
     # y_{n+1} = y_n + (k1 + 2*k2 + 2*k3 + k4) / 6
     # [STUDENT_CODE_HERE]
     for i in range(n_steps - 1):
-        raise NotImplementedError("请在 runge_kutta_4 函数中实现4阶龙格-库塔法")
+        h = dt
+        k1 = h * f(y[i], t[i], *args)
+        k2 = h * f(y[i] + k1/2, t[i] + h/2, *args)
+        k3 = h * f(y[i] + k2/2, t[i] + h/2, *args)
+        k4 = h * f(y[i] + k3, t[i] + h, *args)
+        y[i+1] = y[i] + (k1 + 2*k2 + 2*k3 + k4) / 6
     
     return t, y
 
@@ -181,7 +188,10 @@ def solve_lotka_volterra(alpha: float, beta: float, gamma: float, delta: float,
     # 2. 调用runge_kutta_4函数
     # 3. 从解中提取x和y分量
     # [STUDENT_CODE_HERE]
-    raise NotImplementedError("请在 solve_lotka_volterra 函数中实现求解逻辑")
+    y0_vec = np.array([x0, y0])
+    t, y = runge_kutta_4(lotka_volterra_system, y0_vec, t_span, dt, alpha, beta, gamma, delta)
+    x = y[:, 0]
+    y = y[:, 1]
     
     return t, x, y
 
@@ -212,7 +222,28 @@ def compare_methods(alpha: float, beta: float, gamma: float, delta: float,
     # 2. 分别调用三种方法
     # 3. 构造并返回结果字典
     # [STUDENT_CODE_HERE]
-    raise NotImplementedError("请在 compare_methods 函数中实现方法比较")
+    y0_vec = np.array([x0, y0])
+    t_euler, y_euler = euler_method(lotka_volterra_system, y0_vec, t_span, dt, alpha, beta, gamma, delta)
+    x_euler = y_euler[:, 0]
+    y_euler = y_euler[:, 1]
+
+    # 改进欧拉法
+    t_ieuler, y_ieuler = improved_euler_method(lotka_volterra_system, y0_vec, t_span, dt, alpha, beta, gamma, delta)
+                                      
+    x_ieuler = y_ieuler[:, 0]
+    y_ieuler = y_ieuler[:, 1]
+
+    # 4阶龙格-库塔法
+    t_rk4, y_rk4 = runge_kutta_4(lotka_volterra_system, y0_vec, t_span, dt, alpha, beta, gamma, delta)
+                              
+    x_rk4 = y_rk4[:, 0]
+    y_rk4 = y_rk4[:, 1]
+
+    results = {
+        'euler': {'t': t_euler, 'x': x_euler, 'y': y_euler},
+        'improved_euler': {'t': t_ieuler, 'x': x_ieuler, 'y': y_ieuler},
+        'rk4': {'t': t_rk4, 'x': x_rk4, 'y': y_rk4}
+    }
     
     return results
 
@@ -233,7 +264,27 @@ def plot_population_dynamics(t: np.ndarray, x: np.ndarray, y: np.ndarray,
     # 子图2：相空间轨迹图（y vs x）
     # 提示：使用plt.subplot(1, 2, 1)和plt.subplot(1, 2, 2)
     # [STUDENT_CODE_HERE]
-    raise NotImplementedError("请在 plot_population_dynamics 函数中实现绘图功能")
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(t, x, label='Prey (x)')
+    plt.plot(t, y, label='Predator (y)')
+    plt.xlabel('Time')
+    plt.ylabel('Population quantity')
+    plt.title('Population size changes over time')
+    plt.legend()
+    plt.grid(True)
+
+    plt.subplot(1, 2, 2)
+    plt.plot(x, y)
+    plt.xlabel('Herds of game (x)')
+    plt.ylabel('The number of predators (y)')
+    plt.title('Phase space trajectory diagram')
+    plt.grid(True)
+
+    plt.suptitle(title)
+    plt.tight_layout()
+    plt.savefig('population_dynamics.png')  # 保存图像
+    plt.show()
 
 
 def plot_method_comparison(results: dict) -> None:
@@ -249,7 +300,65 @@ def plot_method_comparison(results: dict) -> None:
     # 2. 上排：三种方法的时间序列图
     # 3. 下排：三种方法的相空间图
     # [STUDENT_CODE_HERE]
-    raise NotImplementedError("请在 plot_method_comparison 函数中实现比较图绘制")
+    plt.figure(figsize=(15, 10))
+    
+    # 时间序列图
+    plt.subplot(2, 3, 1)
+    plt.plot(results['euler']['t'], results['euler']['x'], label='Euler Method')
+    plt.title('The number of prey (Euler's method)')
+    plt.xlabel('Time')
+    plt.ylabel('herds of game')
+    plt.grid(True)
+    
+    plt.subplot(2, 3, 2)
+    plt.plot(results['euler']['t'], results['euler']['y'], label='Euler Method')
+    plt.title('Number of predators (Euler's method)')
+    plt.xlabel('Time')
+    plt.ylabel('The number of predators')
+    plt.grid(True)
+    
+    plt.subplot(2, 3, 4)
+    plt.plot(results['improved_euler']['t'], results['improved_euler']['x'], label='Improved Euler Method')
+    plt.title('The number of prey (improved Euler method)')
+    plt.xlabel('Time')
+    plt.ylabel('herds of game')
+    plt.grid(True)
+    
+    plt.subplot(2, 3, 5)
+    plt.plot(results['improved_euler']['t'], results['improved_euler']['y'], label='Improved Euler Method')
+    plt.title('Number of predators (Improved Euler Method)')
+    plt.xlabel('Time')
+    plt.ylabel('Number of predators (Improved Euler Method)')
+    plt.grid(True)
+    
+    plt.subplot(2, 3, 7)
+    plt.plot(results['rk4']['t'], results['rk4']['x'], label='4th order Rung-Kutafa')
+    plt.title('The number of prey (4th order Rung-Kutafa)')
+    plt.xlabel('Time')
+    plt.ylabel('herds of game')
+    plt.grid(True)
+    
+    plt.subplot(2, 3, 8)
+    plt.plot(results['rk4']['t'], results['rk4']['y'], label='4th order Rung-Kutafa')
+    plt.title('The number of predators (4th order Rung-Kutafa)')
+    plt.xlabel('Time')
+    plt.ylabel('Number of predators (Improved Euler Method)')
+    plt.grid(True)
+    
+    # 相空间图
+    plt.subplot(1, 3, 3)
+    plt.plot(results['euler']['x'], results['euler']['y'], label='欧拉法')
+    plt.plot(results['improved_euler']['x'], results['improved_euler']['y'], label='改进欧拉法')
+    plt.plot(results['rk4']['x'], results['rk4']['y'], label='4阶龙格-库塔法')
+    plt.title('相空间轨迹图')
+    plt.xlabel('herds of game (x)')
+    plt.ylabel('Number of predators (Improved Euler Method) (y)')
+    plt.legend()
+    plt.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig('method_comparison.png')  # 保存图像
+    plt.show()
 
 
 def analyze_parameters() -> None:
@@ -267,8 +376,41 @@ def analyze_parameters() -> None:
     # 3. 计算并验证守恒量
     # 4. 绘制分析结果
     # [STUDENT_CODE_HERE]
-    raise NotImplementedError("请在 analyze_parameters 函数中实现参数分析")
+    alpha, beta, gamma, delta = 1.0, 0.5, 0.5, 2.0
+    t_span = (0, 30)
+    dt = 0.01
 
+    # 测试不同初始条件
+    initial_conditions = [(2.0, 2.0), (3.0, 1.0), (1.0, 3.0)]
+
+    plt.figure(figsize=(15, 10))
+
+    for i, (x0, y0) in enumerate(initial_conditions):
+        t, x, y = solve_lotka_volterra(alpha, beta, gamma, delta, x0, y0, t_span, dt)
+        
+        plt.subplot(2, 3, i+1)
+        plt.plot(t, x, label='Prey')
+        plt.plot(t, y, label='Predator')
+        plt.title(f'Initial conditions: x0={x0}, y0={y0}')
+        plt.xlabel('Time')
+        plt.ylabel('Population Quantity')
+        plt.legend()
+        plt.grid(True)
+        
+        plt.subplot(2, 3, i+4)
+        plt.plot(x, y)
+        plt.title(f'Phase space trajectory (x0={x0}, y0={y0})')
+        plt.xlabel('herds of game (x)')
+        plt.ylabel('The number of predators (y)')
+        plt.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig('parameter_analysis.png')  # 保存图像
+    plt.show()
+    
+    conserved_quantity = delta * x + gamma * y
+    print(f"守恒量的平均值: {np.mean(conserved_quantity)}")
+    print(f"守恒量的标准差: {np.std(conserved_quantity)}")
 
 def main():
     """
@@ -295,19 +437,24 @@ def main():
         # TODO: 实现主函数逻辑 (约15-20行代码)
         # 1. 基本求解
         print("\n1. 使用4阶龙格-库塔法求解...")
-        # [STUDENT_CODE_HERE]
+        t, x, y = solve_lotka_volterra(alpha, beta, gamma, delta, x0, y0, t_span, dt)
+        plot_population_dynamics(t, x, y)
         
         # 2. 方法比较
         print("\n2. 比较不同数值方法...")
-        # [STUDENT_CODE_HERE]
+        results = compare_methods(alpha, beta, gamma, delta, x0, y0, t_span, dt)
+        plot_method_comparison(results)
         
         # 3. 参数分析
         print("\n3. 分析参数影响...")
-        # [STUDENT_CODE_HERE]
+        analyze_parameters()
         
         # 4. 数值结果统计
         print("\n4. 数值结果统计:")
-        # [STUDENT_CODE_HERE]
+        print(f"猎物最终数量: {x[-1]}")
+        print(f"捕食者最终数量: {y[-1]}")
+        print(f"猎物最大数量: {np.max(x)}")
+        print(f"捕食者最大数量: {np.max(y)}")
         
     except NotImplementedError as e:
         print(f"\n错误: {e}")
