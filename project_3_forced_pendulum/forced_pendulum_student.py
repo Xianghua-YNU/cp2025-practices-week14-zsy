@@ -48,16 +48,9 @@ def find_resonance(l=0.1, g=9.81, C=2, Omega_range=None, t_span=(0,200), y0=[0,0
     for Omega in Omega_range:
         t, theta = solve_pendulum(l, g, C, Omega, t_span, y0)
         
-        if len(t) > 0:
-            steady_state_index = t > 50
-            if np.any(steady_state_index):
-                max_amplitude = np.max(np.abs(theta[steady_state_index]))
-            else:
-                max_amplitude = 0
-        else:
-            max_amplitude = 0
-        
-        amplitudes.append(max_amplitude)
+        steady_idx = t > t_span[0] + (t_span[1]-t_span[0])/2
+        amplitude = np.max(np.abs(theta[steady_idx]))
+        amplitudes.append(amplitude)
     
     return Omega_range, amplitudes
     
