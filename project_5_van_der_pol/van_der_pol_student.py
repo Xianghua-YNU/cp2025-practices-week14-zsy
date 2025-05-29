@@ -183,7 +183,7 @@ def main():
     # 1. 绘制相空间轨迹
     # 2. 分析极限环特征
     plot_phase_space(states, title="Task 3 - Phase Space Trajectory")
-    amplitude, period = analyze_limit_cycle(states, dt)  # 传递 dt 参数
+    amplitude, period = analyze_limit_cycle(states, dt)
     print(f"极限环振幅: {amplitude:.2f}, 周期: {period:.2f}")
     
     # TODO: 任务4 - 能量分析
