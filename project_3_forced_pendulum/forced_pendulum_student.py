@@ -46,7 +46,6 @@ def find_resonance(l=0.1, g=9.81, C=2, Omega_range=None, t_span=(0,200), y0=[0,0
     amplitudes = []
     
     for Omega in Omega_range:
-        t_eval = np.linspace(t_span[0], t_span[1], 1000)
         t, theta = solve_pendulum(l, g, C, Omega, t_span, y0)
         
         if len(t) > 0:
