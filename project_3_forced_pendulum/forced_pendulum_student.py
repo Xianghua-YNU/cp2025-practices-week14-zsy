@@ -41,7 +41,7 @@ def find_resonance(l=0.1, g=9.81, C=2, Omega_range=None, t_span=(0,200), y0=[0,0
     # 提示: 需要调用solve_pendulum函数并分析结果
     if Omega_range is None:
         Omega_0 = np.sqrt(g / l)
-        Omega_range = np.linspace(Omega_0 / 2, 2 * Omega_0, 50)  # 确保返回的点数是50
+        Omega_range = np.linspace(Omega_0 / 2, 2 * Omega_0, 50)  # 确保返回50个点
     
     amplitudes = []
     
