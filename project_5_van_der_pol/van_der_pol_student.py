@@ -181,7 +181,7 @@ def main():
     # TODO: 任务4 - 能量分析
     # 1. 计算和绘制能量随时间的变化
     # 2. 分析能量的耗散和补充
-   energies = np.array([calculate_energy(state, omega) for state in states])
+    energies = np.array([calculate_energy(state, omega) for state in states])
     plt.figure()
     plt.plot(t_values, energies)
     plt.xlabel('时间 t')
