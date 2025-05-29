@@ -85,8 +85,8 @@ def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
     plt.figure()
     plt.plot(t, states[:, 0], label='x(t)')
     plt.plot(t, states[:, 1], label='v(t)')
-    plt.xlabel('时间 t')
-    plt.ylabel('状态')
+    plt.xlabel('t')
+    plt.ylabel('State')
     plt.title(title)
     plt.legend()
     plt.grid(True)
@@ -104,8 +104,8 @@ def plot_phase_space(states: np.ndarray, title: str) -> None:
     # TODO: 实现相空间图的绘制
     plt.figure()
     plt.plot(states[:, 0], states[:, 1])
-    plt.xlabel('位移 x')
-    plt.ylabel('速度 v')
+    plt.xlabel('displacement x')
+    plt.ylabel('velocity v')
     plt.title(title)
     plt.grid(True)
     plt.savefig(f"{title}.png")  # 保存为PNG
@@ -128,7 +128,7 @@ def calculate_energy(state: np.ndarray, omega: float = 1.0) -> float:
     E = 0.5 * v**2 + 0.5 * omega**2 * x**2
     return E
 
-def analyze_limit_cycle(states: np.ndarray) -> Tuple[float, float]:
+def analyze_limit_cycle(states: np.ndarray, dt: float = 0.01) -> Tuple[float, float]:
     """
     分析极限环的特征（振幅和周期）。
     
@@ -160,19 +160,19 @@ def main():
     # 1. 求解van der Pol方程
     # 2. 绘制时间演化图
     t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
-    plot_time_evolution(t_values, states, title="任务1 - 时间演化图")
+    plot_time_evolution(t_values, states, title="Task 1 - Time Evolution Graph")
     # TODO: 任务2 - 参数影响分析
     # 1. 尝试不同的mu值
     # 2. 比较和分析结果
     mu_values = [1.0, 2.0, 4.0]
     for mu in mu_values:
         t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
-        plot_time_evolution(t_values, states, title=f"任务2 - mu={mu} 时间演化图")
-        plot_phase_space(states, title=f"任务2 - mu={mu} 相空间轨迹")
+        plot_time_evolution(t_values, states, title=f"Task 2 - mu={mu} Time evolution graph")
+        plot_phase_space(states, title=f"Task 2 - mu={mu} Phase space trajectory")
     # TODO: 任务3 - 相空间分析
     # 1. 绘制相空间轨迹
     # 2. 分析极限环特征
-    plot_phase_space(states, title="任务3 - 相空间轨迹")
+    plot_phase_space(states, title="Task 3 - Phase Space Trajectory")
     amplitude, period = analyze_limit_cycle(states, dt)  # 传递 dt 参数
     print(f"极限环振幅: {amplitude:.2f}, 周期: {period:.2f}")
     
@@ -182,20 +182,20 @@ def main():
     energies = np.array([calculate_energy(state, omega) for state in states])
     plt.figure()
     plt.plot(t_values, energies)
-    plt.xlabel('时间 t')
-    plt.ylabel('能量 E')
-    plt.title("任务4 - 能量随时间的变化")
+    plt.xlabel('t')
+    plt.ylabel('Energy E')
+    plt.title("Task 4 - Changes in Energy over Time")
     plt.grid(True)
-    plt.savefig("任务4 - 能量随时间的变化.png")  # 保存为PNG
+    plt.savefig("Task 4 - Energy Changes over Time.png")  # 保存为PNG
     plt.show()
  
     plt.figure()
     plt.plot(t_values[:-1], np.diff(energies) / dt)
-    plt.xlabel('时间 t')
-    plt.ylabel('能量变化率 dE/dt')
-    plt.title("任务4 - 能量变化率")
+    plt.xlabel('t')
+    plt.ylabel('energy gradient dE/dt')
+    plt.title("Task 4 - Rate of Energy Change")
     plt.grid(True)
-    plt.savefig("任务4 - 能量变化率.png")  # 保存为PNG
+    plt.savefig("Task 4 - Rate of Energy Change.png")  # 保存为PNG
     plt.show()
 
 if __name__ == "__main__":
