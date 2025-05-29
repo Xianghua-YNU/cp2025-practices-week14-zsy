@@ -305,7 +305,7 @@ def plot_method_comparison(results: dict) -> None:
     # 时间序列图
     plt.subplot(2, 3, 1)
     plt.plot(results['euler']['t'], results['euler']['x'], label='Euler Method')
-    plt.title('The number of prey (Euler's method)')
+    plt.title('The number of prey (Euler method)')
     plt.xlabel('Time')
     plt.ylabel('herds of game')
     plt.grid(True)
