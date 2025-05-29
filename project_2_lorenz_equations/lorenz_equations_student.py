@@ -27,7 +27,7 @@ def lorenz_system(state, sigma, r, b):
     dxdt = sigma * (y - x)
     dydt = x * (r - z) - y
     dzdt = x * y - b * z
-    return [dxdt, dydt, dzdt]
+    return np.array([dxdt, dydt, dzdt])
 
 
 def solve_lorenz_equations(sigma=10.0, r=28.0, b=8/3,
