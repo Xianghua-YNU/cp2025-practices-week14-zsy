@@ -7,7 +7,7 @@ def forced_pendulum_ode(t, state, l, g, C, Omega):
     受驱单摆的常微分方程
     state: [theta, omega]
     返回: [dtheta/dt, domega/dt]
-    """
+    """ 
     # TODO: 在此实现受迫单摆的ODE方程
     theta, omega = state
     dtheta_dt = omega
