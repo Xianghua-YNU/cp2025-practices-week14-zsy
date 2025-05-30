@@ -61,18 +61,10 @@ def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float
         Tuple[np.ndarray, np.ndarray]: (时间点数组, 状态数组)
     """
     # TODO: 实现ODE求解器
-    t_start, t_end = t_span
-    num_steps = int((t_end - t_start) / dt) + 1
-    t_values = np.linspace(t_start, t_end, num_steps)
-    states = np.zeros((num_steps, len(initial_state)))
-    states[0] = initial_state
-    current_state = initial_state.copy()
-
-    for i in range(1, num_steps):
-        current_state = rk4_step(ode_func, current_state, t_values[i-1], dt, **kwargs)
-        states[i] = current_state
-
-    return t_values, states
+    t_eval = np.arange(t_span[0], t_span[1] + dt, dt)
+    sol = solve_ivp(ode_func, t_span, initial_state, 
+                   t_eval=t_eval, args=tuple(kwargs.values()), method='RK45')
+    return sol.t, sol.y.T
 
 def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
     """
