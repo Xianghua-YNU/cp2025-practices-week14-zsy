@@ -20,7 +20,6 @@ def van_der_pol_ode(state: np.ndarray, t: float, mu: float = 1.0, omega: float =
     # TODO: 实现van der Pol方程
     # dx/dt = v
     # dv/dt = mu(1-x^2)v - omega^2*x
-    x, v = state
     dxdt = v
     dvdt = mu * (1 - x**2) * v - omega**2 * x
     return np.array([dxdt, dvdt])
