@@ -163,21 +163,23 @@ def main():
     # TODO: 任务1 - 基本实现
     # 1. 求解van der Pol方程
     # 2. 绘制时间演化图
-    t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
+    t, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
     plot_time_evolution(t_values, states, title="Task 1 - Time Evolution Graph")
     # TODO: 任务2 - 参数影响分析
     # 1. 尝试不同的mu值
     # 2. 比较和分析结果
     mu_values = [1.0, 2.0, 4.0]
     for mu in mu_values:
-        t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
+        t, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
         plot_time_evolution(t_values, states, title=f"Task 2 - mu={mu} Time evolution graph")
+        amplitude, period = analyze_limit_cycle(states)
         plot_phase_space(states, title=f"Task 2 - mu={mu} Phase space trajectory")
     # TODO: 任务3 - 相空间分析
     # 1. 绘制相空间轨迹
     # 2. 分析极限环特征
+    for mu in mu_values:
+        t, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
     plot_phase_space(states, title="Task 3 - Phase Space Trajectory")
-    amplitude, period = analyze_limit_cycle(states, dt)
     print(f"极限环振幅: {amplitude:.2f}, 周期: {period:.2f}")
     
     # TODO: 任务4 - 能量分析
