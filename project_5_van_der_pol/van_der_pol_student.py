@@ -66,6 +66,7 @@ def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float
     sol = solve_ivp(ode_func, t_span, initial_state, t_eval=t_eval, args=tuple(kwargs.values()), method='RK45')
     return sol.t, sol.y.T
 
+
 def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
     """
     绘制状态随时间的演化。
