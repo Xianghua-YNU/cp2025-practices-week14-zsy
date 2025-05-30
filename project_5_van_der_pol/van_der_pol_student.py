@@ -18,9 +18,8 @@ def van_der_pol_ode(t, state, mu=1.0, omega=1.0) -> np.ndarray:
     """
     x, v = state
     # TODO: 实现van der Pol方程
-    dx/dt = v
-    dv/dt = mu(1-x^2)v - omega^2*x
-    return np.array([dx/dt, dv/dt])
+
+    return np.array([v, mu*(1-x**2)*v - omega**2*x])
 
 def rk4_step(ode_func: Callable, state: np.ndarray, t:float, dt: float, **kwargs) -> np.ndarray:
     """
