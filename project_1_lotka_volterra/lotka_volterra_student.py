@@ -51,7 +51,7 @@ def lotka_volterra_system(state: np.ndarray, t: float, alpha: float, beta: float
 def euler_method(f, y0: np.ndarray, t_span: Tuple[float, float], 
                  dt: float, *args) -> Tuple[np.ndarray, np.ndarray]:
     """
-    欧拉法求解常微分方程组
+    欧拉法求解常微分方程组 
     
     参数:
         f: 微分方程组的右端函数，签名为 f(y, t, *args)
