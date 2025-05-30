@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from typing import Tuple, Callable, List
+from scipy.integrate import solve_ivp
 
 def van_der_pol_ode(state: np.ndarray, t: float, mu: float = 1.0, omega: float = 1.0) -> np.ndarray:
     """
