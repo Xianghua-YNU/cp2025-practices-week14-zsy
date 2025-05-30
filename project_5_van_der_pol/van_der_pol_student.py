@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from typing import Tuple, Callable, List
 from scipy.integrate import solve_ivp
 
-def van_der_pol_ode(state: np.ndarray, t, mu: float = 1.0, omega: float = 1.0) -> np.ndarray:
+def van_der_pol_ode(t, state, mu=1.0, omega=1.0) -> np.ndarray:
     """
     van der Pol振子的一阶微分方程组。
     
@@ -18,11 +18,11 @@ def van_der_pol_ode(state: np.ndarray, t, mu: float = 1.0, omega: float = 1.0) -
     """
     x, v = state
     # TODO: 实现van der Pol方程
-    # dx/dt = v
-    # dv/dt = mu(1-x^2)v - omega^2*x
-    return np.array([v, mu*(1-x**2)*v - omega**2*x])
+    dx/dt =v
+    dv/dt = mu(1-x^2)v - omega^2*x
+    return np.array([dx/dt, dv/dt])
 
-def rk4_step(ode_func: Callable, state: np.ndarray, t, dt: float, **kwargs) -> np.ndarray:
+def rk4_step(ode_func: Callable, state: np.ndarray, t:float, dt: float, **kwargs) -> np.ndarray:
     """
     使用四阶龙格-库塔方法进行一步数值积分。
     
@@ -43,8 +43,7 @@ def rk4_step(ode_func: Callable, state: np.ndarray, t, dt: float, **kwargs) -> n
     k4 = ode_func(t + dt, state + dt * k3, **kwargs)
     return state + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
     
-def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float, float], 
-              dt: float, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
+def solve_ode(ode_func, initial_state, t_span, dt, **kwargs) -> Tuple[np.ndarray, np.ndarray]:
     """
     求解常微分方程组。
     
