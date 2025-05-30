@@ -71,7 +71,7 @@ def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float
     for i in range(1, num_steps):
         current_state = rk4_step(ode_func, current_state, t_values[i-1], dt, **kwargs)
         states[i] = current_state
-    
+
     return t_values, states
 
 def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
@@ -144,18 +144,18 @@ def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
     x = states[:, 0]
     t = np.arange(len(x)) * dt
     amplitude = (np.max(x) - np.min(x)) / 2.0
-    
+
     peaks = []
     for i in range(1, len(x)-1):
         if x[i] > x[i-1] and x[i] > x[i+1]:
             peaks.append(x[i])
-    
+
     period = None
     if len(peaks) >= 2:
         peak_times = [t[i] for i in range(1, len(x)-1) if x[i] > x[i-1] and x[i] > x[i+1]]
         periods = np.diff(peak_times)
         period = np.mean(periods) if len(periods) > 0 else None
-    
+
     return amplitude, period
 
 def main():
