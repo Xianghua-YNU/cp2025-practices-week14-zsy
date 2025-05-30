@@ -128,6 +128,7 @@ def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
     
     参数:
         states: np.ndarray, 状态数组
+        dt: float, 时间步长
     
     返回:
         Tuple[float, float]: (振幅, 周期)
@@ -145,7 +146,6 @@ def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
     period = np.mean(np.diff(peaks)) if len(peaks) >= 2 else np.nan
 
     return amplitude, period
-
 def main():
     # 设置基本参数
     mu = 1.0
@@ -183,6 +183,7 @@ def main():
     # TODO: 任务4 - 能量分析
     # 1. 计算和绘制能量随时间的变化
     # 2. 分析能量的耗散和补充
+    t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
     energies = np.array([calculate_energy(state, omega) for state in states])
     plt.figure()
     plt.plot(t_values, energies)
