@@ -147,6 +147,7 @@ def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
     period = np.mean(np.diff(peaks)) if len(peaks) >= 2 else np.nan
 
     return amplitude, period
+    
 def main():
     # 设置基本参数
     mu = 1.0
