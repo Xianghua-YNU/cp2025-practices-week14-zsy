@@ -40,10 +40,10 @@ def rk4_step(ode_func: Callable, state: np.ndarray, t: float, dt: float, **kwarg
         np.ndarray: 下一步的状态
     """
     # TODO: 实现RK4方法
-    k1 = ode_func(state, t, **kwargs)
-    k2 = ode_func(state + 0.5 * dt * k1, t + 0.5 * dt, **kwargs)
-    k3 = ode_func(state + 0.5 * dt * k2, t + 0.5 * dt, **kwargs)
-    k4 = ode_func(state + dt * k3, t + dt, **kwargs)
+    k1 = ode_func(t, state, **kwargs)
+    k2 = ode_func(t + 0.5 * dt, state + 0.5 * dt * k1, **kwargs)
+    k3 = ode_func(t + 0.5 * dt, state + 0.5 * dt * k2, **kwargs)
+    k4 = ode_func(t + dt, state + dt * k3, **kwargs)
     return state + (dt / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4)
     
 def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float, float], 
@@ -63,8 +63,7 @@ def solve_ode(ode_func: Callable, initial_state: np.ndarray, t_span: Tuple[float
     """
     # TODO: 实现ODE求解器
     t_eval = np.arange(t_span[0], t_span[1] + dt, dt)
-    sol = solve_ivp(ode_func, t_span, initial_state, 
-                   t_eval=t_eval, args=tuple(kwargs.values()), method='RK45')
+    sol = solve_ivp(ode_func, t_span, initial_state, t_eval=t_eval, args=tuple(kwargs.values()), method='RK45')
     return sol.t, sol.y.T
 
 def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
@@ -134,22 +133,17 @@ def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
         Tuple[float, float]: (振幅, 周期)
     """
     # TODO: 实现极限环分析
-    skip = int(len(states)*0.5)
-    x = states[skip:, 0]
-    t = np.arange(len(x))
-    
+    x = states[:, 0]
+    t = np.arange(len(x)) * dt
+    amplitude = (np.max(x) - np.min(x)) / 2.0
+
     peaks = []
     for i in range(1, len(x)-1):
         if x[i] > x[i-1] and x[i] > x[i+1]:
-            peaks.append(x[i])
-    amplitude = np.mean(peaks) if peaks else np.nan
+            peaks.append(t[i])
 
-    if len(peaks) >= 2:
-        periods = np.diff(t[1:-1][np.array([x[i] > x[i-1] and x[i] > x[i+1] for i in range(1, len(x)-1)])])
-        period = np.mean(periods) if len(periods) > 0 else np.nan
-    else:
-        period = np.nan
-    
+    period = np.mean(np.diff(peaks)) if len(peaks) >= 2 else np.nan
+
     return amplitude, period
 
 def main():
@@ -163,24 +157,28 @@ def main():
     # TODO: 任务1 - 基本实现
     # 1. 求解van der Pol方程
     # 2. 绘制时间演化图
-    t, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
+    t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
     plot_time_evolution(t_values, states, title="Task 1 - Time Evolution Graph")
     # TODO: 任务2 - 参数影响分析
     # 1. 尝试不同的mu值
     # 2. 比较和分析结果
     mu_values = [1.0, 2.0, 4.0]
     for mu in mu_values:
-        t, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
-        plot_time_evolution(t_values, states, title=f"Task 2 - mu={mu} Time evolution graph")
-        amplitude, period = analyze_limit_cycle(states)
-        plot_phase_space(states, title=f"Task 2 - mu={mu} Phase space trajectory")
+        t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
+        plot_time_evolution(t_values, states, title=f"Task 2 - mu={mu} Time Evolution Graph")
+        amplitude, period = analyze_limit_cycle(states, dt)
+        print(f"mu={mu}: 振幅={amplitude:.2f}, 周期={period:.2f}")
+        plot_phase_space(states, title=f"Task 2 - mu={mu} Phase Space Trajectory")
+
     # TODO: 任务3 - 相空间分析
     # 1. 绘制相空间轨迹
     # 2. 分析极限环特征
     for mu in mu_values:
-        t, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
-    plot_phase_space(states, title="Task 3 - Phase Space Trajectory")
-    print(f"极限环振幅: {amplitude:.2f}, 周期: {period:.2f}")
+        t_values, states = solve_ode(van_der_pol_ode, initial_state, t_span, dt, mu=mu, omega=omega)
+        plot_phase_space(states, title=f"Task 3 - mu={mu} Phase Space Trajectory")
+        amplitude, period = analyze_limit_cycle(states, dt)
+        print(f"mu={mu}: 振幅={amplitude:.2f}, 周期={period:.2f}")
+
     
     # TODO: 任务4 - 能量分析
     # 1. 计算和绘制能量随时间的变化
