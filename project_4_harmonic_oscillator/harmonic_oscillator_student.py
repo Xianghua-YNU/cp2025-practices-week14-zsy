@@ -115,10 +115,10 @@ def plot_time_evolution(t: np.ndarray, states: np.ndarray, title: str) -> None:
     """
     # TODO: 实现时间演化图的绘制
     plt.figure(figsize=(10, 6))
-    plt.plot(t, states[:, 0], label='位移x(t)')
-    plt.plot(t, states[:, 1], label='速度v(t)')
-    plt.xlabel('时间 t')
-    plt.ylabel('位移 x 和速度 v')
+    plt.plot(t, states[:, 0], label='Displacement x(t)')
+    plt.plot(t, states[:, 1], label='velocity v(t)')
+    plt.xlabel('t')
+    plt.ylabel('Displacement x and velocity v')
     plt.title(title)
     plt.legend()
     plt.grid(True)
@@ -136,8 +136,8 @@ def plot_phase_space(states: np.ndarray, title: str) -> None:
     # TODO: 实现相空间图的绘制
     plt.figure(figsize=(10, 6))
     plt.plot(states[:, 0], states[:, 1])
-    plt.xlabel('位移 x')
-    plt.ylabel('速度 v')
+    plt.xlabel('Displacement x')
+    plt.ylabel('velocity v')
     plt.title(title)
     plt.grid(True)
     plt.savefig(f"{title}.png")  # 保存图像
@@ -176,8 +176,8 @@ def main():
     # 3. 绘制时间演化图
     initial_state_harmonic = np.array([1.0, 0.0])
     t_harmonic, states_harmonic = solve_ode(harmonic_oscillator_ode, initial_state_harmonic, t_span, dt, omega=omega)
-    plot_time_evolution(t_harmonic, states_harmonic, "简谐振子的时间演化")
-    plot_phase_space(states_harmonic, "简谐振子的相空间轨迹")
+    plot_time_evolution(t_harmonic, states_harmonic, "The temporal evolution of simple harmonic oscillators")
+    plot_phase_space(states_harmonic, "The phase space trajectory of a simple harmonic oscillator")
     
     # TODO: 任务2 - 振幅对周期的影响分析
     # 1. 使用不同的初始振幅
@@ -197,8 +197,8 @@ def main():
     # 2. 分析不同振幅的影响
     initial_state_anharmonic = np.array([1.0, 0.0])
     t_anharmonic, states_anharmonic = solve_ode(anharmonic_oscillator_ode, initial_state_anharmonic, t_span, dt, omega=omega)
-    plot_time_evolution(t_anharmonic, states_anharmonic, "非谐振子的时间演化")
-    plot_phase_space(states_anharmonic, "非谐振子的相空间轨迹")
+    plot_time_evolution(t_anharmonic, states_anharmonic, "The time evolution of the non-harmonic oscillator")
+    plot_phase_space(states_anharmonic, "The phase space trajectory of the non-harmonic oscillator")
 
     initial_amplitudes_anharmonic = [1.0, 2.0]
     periods_anharmonic = []
@@ -213,8 +213,8 @@ def main():
     # TODO: 任务4 - 相空间分析
     # 1. 绘制相空间轨迹
     # 2. 比较简谐和非谐振子
-    plot_phase_space(states_harmonic, "简谐振子相空间轨迹")
-    plot_phase_space(states_anharmonic, "非谐振子相空间轨迹")
+    plot_phase_space(states_harmonic, "The phase space trajectory of a simple harmonic oscillator")
+    plot_phase_space(states_anharmonic, "The phase space trajectory of the non-harmonic oscillator")
 
 if __name__ == "__main__":
     main()
