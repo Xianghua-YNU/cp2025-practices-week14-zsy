@@ -141,20 +141,21 @@ def analyze_limit_cycle(states: np.ndarray, dt: float) -> Tuple[float, float]:
         Tuple[float, float]: (振幅, 周期)
     """
     # TODO: 实现极限环分析
+    skip = int(len(states)*0.5)
     x = states[:, 0]
     t = np.arange(len(x)) * dt
-    amplitude = (np.max(x) - np.min(x)) / 2.0
 
     peaks = []
     for i in range(1, len(x)-1):
         if x[i] > x[i-1] and x[i] > x[i+1]:
             peaks.append(x[i])
-
-    period = None
+    amplitude = np.mean(peaks) if peaks else np.nan
+    
     if len(peaks) >= 2:
         peak_times = [t[i] for i in range(1, len(x)-1) if x[i] > x[i-1] and x[i] > x[i+1]]
-        periods = np.diff(peak_times)
         period = np.mean(periods) if len(periods) > 0 else None
+    else:
+        period = np.nan
 
     return amplitude, period
 
